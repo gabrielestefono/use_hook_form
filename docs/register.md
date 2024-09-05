@@ -11,8 +11,8 @@ Ao invocar a função register e dando a ele o nome do input, você recebe os se
 
 Nome            Typo                Descrição
 onChange        ChangeHandler       Propriedade onChange para subscrever o evento de mudança do input.
-onBlur	        ChangeHandler	    Prop onBlur para assinar o evento de perda de foco do input.
-nome	        string              Nome do input sendo registrado.
+onBlur	        ChangeHandler	      Prop onBlur para assinar o evento de perda de foco do input.
+name	          string              Nome do input sendo registrado.
 
 Nome do Input	                        Resultado do Envio
 register("firstName")	                {firstName: 'value'}
