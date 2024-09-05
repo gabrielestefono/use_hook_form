@@ -1,5 +1,5 @@
 {
-  "name": "use_hook_form",
+  "name": "react-hook-form",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -9,11 +9,10 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "next": "14.2.4",
+    "next": "14.2.7",
     "react": "^18",
     "react-dom": "^18",
-    "react-hook-form": "^7.52.0",
-    "sass": "^1.77.6"
+    "react-hook-form": "^7.53.0"
   },
   "devDependencies": {
     "@types/node": "^20",
