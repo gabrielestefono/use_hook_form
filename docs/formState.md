@@ -22,58 +22,64 @@ const {
 // isDirty: true
 setValue('test', 'change')
  
-// isDirty: false because there getValues() === defaultValues
+// isDirty: false porque getValues() === defaultValues
 setValue('test', '')
 ```
 
-* File typed input will need to be managed at the app level due to the ability to cancel file selection and FileList object.
-* Do not support custom object, Class or File object.
+* A entrada de arquivo digitada precisará ser gerenciada no nível do aplicativo devido à capacidade de cancelar a seleção de arquivos e ao objeto FileList.
+* Não é suportado objeto customizado, Classe ou objeto File.
 
-name: `dirtyFields`
+nome: `dirtyFields`
 
-type: `object`
+tipo: `object`
 
-description:
-    An object with the user-modified fields. Make sure to provide all inputs' defaultValues via useForm, so the library can compare against the defaultValues.
-    * **Important:** Make sure to provide defaultValues at the useForm, so hook form can have a single source of truth to compare each field's dirtiness.
-    * Dirty fields will not represent as isDirty formState, because dirty fields are marked field dirty at field level rather the entire form. If you want to determine the entire form state use isDirty instead.
-name: `touchedFields`	    
+descrição:
+    Um objeto com os campos modificados pelo usuário. Certifique-se de fornecer todos os defaultValues dos inputs via useForm, para que a biblioteca possa comparar com os defaultValues.
+    * **Importante:** Certifique-se de fornecer defaultValues no useForm, para que o hook form tenha uma única fonte de verdade para comparar a "dirtiness" de cada campo.
+    * Campos sujos não representam o estado formState.isDirty, porque campos sujos são marcados como sujos no nível do campo, em vez de no formulário inteiro. Se você quiser determinar o estado do formulário inteiro, use isDirty.
 
-type: `object`	
+nome: `touchedFields`
 
-description: 
-    An object containing all the inputs the user has interacted with.
-name: `defaultValues`	    
+tipo: `object`
 
-type: `object`	
+descrição:
+    Um objeto contendo todos os inputs com os quais o usuário interagiu.
 
-description: 
-    The value which has been set at useForm's defaultValues or updated defaultValues via reset API.
-name: `isSubmitted`	        
+nome: `defaultValues`
 
-type: `boolean`	
+tipo: `object`
 
-description: 
-    Set to true after the form is submitted. Will remain true until the reset method is invoked.
-name: `isSubmitSuccessful`  
+descrição:
+    O valor que foi definido em defaultValues do useForm ou valores default atualizados via API de reset.
 
-type: `boolean`	
+nome: `isSubmitted`
 
-description: 
-    Indicate the form was successfully submitted without any runtime error.
-name: `isSubmitting`	    
+tipo: `boolean`
 
-type: `boolean`	
+descrição:
+    Define como verdadeiro após o envio do formulário. Permanecerá verdadeiro até que o método reset seja invocado.
 
-description: 
-    true if the form is currently being submitted. false otherwise.
-name: `isLoading`           
+nome: `isSubmitSuccessful`
 
-type: `boolean`	
+tipo: `boolean`
 
-description: 
-    true if the form is currently loading async default values.
-    **Important:** this prop is only applicable to async defaultValues
+descrição:
+    Indica que o formulário foi enviado com sucesso sem erros de execução.
+
+nome: `isSubmitting`
+
+tipo: `boolean`
+
+descrição:
+    Verdadeiro se o formulário estiver sendo enviado no momento. Falso caso contrário.
+
+nome: `isLoading`
+
+tipo: `boolean`
+
+descrição:
+    Verdadeiro se o formulário estiver carregando valores default assíncronos.
+    **Importante:** esta propriedade só é aplicável a valores default assíncronos.
     ```typescript
     const { 
         formState: { isLoading } 
@@ -81,66 +87,71 @@ description:
         defaultValues: async () => await fetch('/api') 
     });
     ```
-name: `submitCount`	
 
-type: `number`	
+nome: `submitCount`
 
-description: 
-    Number of times the form was submitted.
-name: `isValid`	
+tipo: `number`
 
-type: `boolean`	
+descrição:
+    Número de vezes que o formulário foi enviado.
 
-description: 
-    Set to true if the form doesn't have any errors. 
-    setError has no effect on isValid formState, isValid will always derived via the entire form validation result.
-name: `isValidating`	
+nome: `isValid`
 
-type: `boolean`	
+tipo: `boolean`
 
-description: 
-    Set to true during validation.
-name: `validatingFields`	
+descrição:
+    Define como verdadeiro se o formulário não tiver erros. 
+    setError não tem efeito sobre o formState.isValid; isValid sempre será derivado pelo resultado da validação do formulário inteiro.
 
-type: `boolean`	
+nome: `isValidating`
 
-description: 
-    Capture fields which are getting async validation.
-name: `errors`	
+tipo: `boolean`
 
-type: `object`	
+descrição:
+    Define como verdadeiro durante a validação.
 
-description: 
-    An object with field errors. There is also an ErrorMessage component to retrieve error message easily.
+nome: `validatingFields`
 
-### RULES
+tipo: `boolean`
 
-* formState is wrapped with a Proxy to improve render performance and skip extra logic if specific state is not subscribed to. Therefore make sure you invoke or read it before a render in order to enable the state update.
+descrição:
+    Captura campos que estão passando por validação assíncrona.
 
-* formState is updated in batch. If you want to subscribe to formState via useEffect, make sure that you place the entire formState in the optional array.
+nome: `errors`
+
+tipo: `object`
+
+descrição:
+    Um objeto com erros de campo. Também há um componente ErrorMessage para recuperar mensagens de erro facilmente.
+
+### REGRAS
+
+* formState é envolvido com um Proxy para melhorar o desempenho de renderização e pular a lógica extra se um estado específico não for inscrito. Portanto, certifique-se de invocá-lo ou lê-lo antes de uma renderização para permitir a atualização do estado.
+
+* formState é atualizado em lote. Se você quiser se inscrever em formState via useEffect, certifique-se de colocar o formState inteiro no array opcional.
 
 ```typescript
 useEffect(() => {
   if (formState.errors.firstName) {
-    // do the your logic here
+    // faça sua lógica aqui
   }
 }, [formState]); // ✅ 
-// ❌ formState.errors will not trigger the useEffect
+// ❌ formState.errors não acionará o useEffect
 ```
 
-* Pay attention to the logical operator when subscription to formState.
+* Preste atenção ao operador lógico ao se inscrever em formState.
 
 ```typescript
-// ❌ formState.isValid is accessed conditionally, 
-// so the Proxy does not subscribe to changes of that state
+// ❌ formState.isValid é acessado condicionalmente, 
+// então o Proxy não se inscreve em mudanças desse estado
 return <button disabled={!formState.isDirty || !formState.isValid} />;
   
-// ✅ read all formState values to subscribe to changes
+// ✅ leia todos os valores de formState para se inscrever em mudanças
 const { isDirty, isValid } = formState;
 return <button disabled={!isDirty || !isValid} />;
 ```
 
-#### Examples
+#### Exemplos
 
 ```typescript
 import { useForm } from "react-hook-form";
@@ -155,7 +166,7 @@ export default function App() {
   const {
     register,
     handleSubmit,
-    // Read the formState before render to subscribe the form state through Proxy
+    // Leia o formState antes da renderização para se inscrever no estado do formulário através do Proxy
     formState: { errors, isDirty, isSubmitting, touchedFields, submitCount },
   } = useForm<FormInputs>();
   const onSubmit = (data: FormInputs) => console.log(data);
